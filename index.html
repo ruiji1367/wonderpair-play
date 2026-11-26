@@ -1,133 +1,75 @@
-<!DOCTYPE html>
-<html lang="en-us">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity Web Player | WonderPair_Game</title>
-    <link rel="shortcut icon" href="TemplateData/favicon.ico">
-    <link rel="stylesheet" href="TemplateData/style.css">
-  </head>
-  <body>
-    <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
-      <div id="unity-loading-bar">
-        <div id="unity-logo"></div>
-        <div id="unity-progress-bar-empty">
-          <div id="unity-progress-bar-full"></div>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Play WonderPair together on one PC.">
+  <title>WonderPair — Play together</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main>
+    <header class="hero">
+      <p class="brand">WonderPair</p>
+      <h1>Play together<br>on one PC.</h1>
+      <p class="intro">Choose keyboard play for instant browser play, or phones for an offline local setup.</p>
+    </header>
+
+    <section class="choices" aria-labelledby="choose-title">
+      <h2 id="choose-title">Choose your play setup</h2>
+
+      <article class="choice keyboard">
+        <div>
+          <h3>Play with Keyboard</h3>
+          <p>Start game in your browser. No download needed.</p>
+          <p class="detail">Player 1 uses WASD. Player 2 uses Arrow Keys.</p>
         </div>
-      </div>
-      <div id="unity-warning"> </div>
-      <div id="unity-footer">
-        <div id="unity-logo-title-footer"></div>
-        <div id="unity-fullscreen-button"></div>
-        <div id="unity-build-title">WonderPair_Game</div>
-      </div>
-    </div>
-    <script>
-      var canvas = document.querySelector("#unity-canvas");
+        <a class="button primary" href="play/">Play now</a>
+      </article>
 
-      // Shows a temporary message banner/ribbon for a few seconds, or
-      // a permanent error message on top of the canvas if type=='error'.
-      // If type=='warning', a yellow highlight color is used.
-      // Modify or remove this function to customize the visually presented
-      // way that non-critical warnings and error messages are presented to the
-      // user.
-      function unityShowBanner(msg, type) {
-        var warningBanner = document.querySelector("#unity-warning");
-        function updateBannerVisibility() {
-          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
-        }
-        var div = document.createElement('div');
-        div.innerHTML = msg;
-        warningBanner.appendChild(div);
-        if (type == 'error') div.style = 'background: red; padding: 10px;';
-        else {
-          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
-          setTimeout(function() {
-            warningBanner.removeChild(div);
-            updateBannerVisibility();
-          }, 5000);
-        }
-        updateBannerVisibility();
-      }
+      <article class="choice phones">
+        <div>
+          <h3>Use Phone Controllers</h3>
+          <p>Use two phones as controllers. Install Connector once on Windows.</p>
+        </div>
+        <button class="button secondary" type="button" aria-expanded="false" aria-controls="phone-setup" data-phone-setup>
+          Set up phones
+        </button>
+      </article>
+    </section>
 
-      var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/WebGL.loader.js";
-      var config = {
-        arguments: [],
-        dataUrl: buildUrl + "/WebGL.data",
-        frameworkUrl: buildUrl + "/WebGL.framework.js",
-        codeUrl: buildUrl + "/WebGL.wasm",
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "WonderPair",
-        productName: "WonderPair_Game",
-        productVersion: "0.1.0",
-        showBanner: unityShowBanner,
-        // errorHandler: function(err, url, line) {
-        //    alert("error " + err + " occurred at line " + line);
-        //    // Return 'true' if you handled this error and don't want Unity
-        //    // to process it further, 'false' otherwise.
-        //    return true;
-        // },
-      };
+    <section class="phone-setup" id="phone-setup" hidden aria-labelledby="phone-title">
+      <h2 id="phone-title">Phone controller setup</h2>
+      <ol>
+        <li>
+          <strong>Download Connector.</strong>
+          <span>It lets your PC run WonderPair without internet.</span>
+          <a class="button primary" href="https://github.com/ruiji1367/wp_mini_game/releases/latest/download/WonderPair_Game_Setup.exe">Download for Windows</a>
+        </li>
+        <li>
+          <strong>Install it once.</strong>
+          <span>Run <code>WonderPair_Game_Setup.exe</code> and accept Windows Firewall access.</span>
+        </li>
+        <li>
+          <strong>Start local play.</strong>
+          <span>Choose Wi-Fi or your PC hotspot when Connector opens.</span>
+          <a class="button primary" href="wonderpair://start">Start Local Play</a>
+        </li>
+        <li>
+          <strong>Pair your phones.</strong>
+          <span>Connect both phones to selected network, then scan one QR code per player.</span>
+        </li>
+      </ol>
+      <p class="protocol-help" hidden data-protocol-help>
+        Connector did not open? Install it first, then try <strong>Start Local Play</strong> again.
+      </p>
+    </section>
 
-      // By default, Unity keeps WebGL canvas render target size matched with
-      // the DOM size of the canvas element (scaled by window.devicePixelRatio)
-      // Set this to false if you want to decouple this synchronization from
-      // happening inside the engine, and you would instead like to size up
-      // the canvas DOM size and WebGL render target sizes yourself.
-      // config.matchWebGLToCanvasSize = false;
-
-      // If you would like all file writes inside Unity Application.persistentDataPath
-      // directory to automatically persist so that the contents are remembered when
-      // the user revisits the site the next time, uncomment the following line:
-      // config.autoSyncPersistentDataPath = true;
-      // This autosyncing is currently not the default behavior to avoid regressing
-      // existing user projects that might rely on the earlier manual
-      // JS_FileSystem_Sync() behavior, but in future Unity version, this will be
-      // expected to change.
-
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        // Mobile device style: fill the whole browser client area with the game canvas:
-
-        var meta = document.createElement('meta');
-        meta.name = 'viewport';
-        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-        document.getElementsByTagName('head')[0].appendChild(meta);
-        document.querySelector("#unity-container").className = "unity-mobile";
-        canvas.className = "unity-mobile";
-
-        // To lower canvas resolution on mobile devices to gain some
-        // performance, uncomment the following line:
-        // config.devicePixelRatio = 1;
-
-
-      } else {
-        // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
-        canvas.style.width = "960px";
-        canvas.style.height = "600px";
-      }
-
-      document.querySelector("#unity-loading-bar").style.display = "block";
-
-      var script = document.createElement("script");
-      script.src = loaderUrl;
-      script.onload = () => {
-        createUnityInstance(canvas, config, (progress) => {
-          document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
-              }).then((unityInstance) => {
-                document.querySelector("#unity-loading-bar").style.display = "none";
-                document.querySelector("#unity-fullscreen-button").onclick = () => {
-                  unityInstance.SetFullscreen(1);
-                };
-
-              }).catch((message) => {
-                alert(message);
-              });
-            };
-
-      document.body.appendChild(script);
-
-    </script>
-  </body>
+    <section class="requirements" aria-labelledby="requirements-title">
+      <h2 id="requirements-title">What you need</h2>
+      <p>Windows PC · Same Wi-Fi or PC hotspot · Two phones optional</p>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
 </html>
